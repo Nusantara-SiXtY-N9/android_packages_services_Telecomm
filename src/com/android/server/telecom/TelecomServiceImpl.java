@@ -515,7 +515,10 @@ public class TelecomServiceImpl {
                             enforceUserHandleMatchesCaller(account.getAccountHandle());
                         }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 720aa20f (Support for API cleanups.)
 
                         if (TextUtils.isEmpty(account.getGroupId())
                                 && mContext.checkCallingOrSelfPermission(MODIFY_PHONE_STATE)
@@ -528,10 +531,13 @@ public class TelecomServiceImpl {
                                     .build();
                         }
 
+<<<<<<< HEAD
                         // Validate the profile boundary of the given image URI.
                         validateAccountIconUserBoundary(account.getIcon());
 
 >>>>>>> 58becd3f (Resolve account image icon profile boundary exploit.)
+=======
+>>>>>>> 720aa20f (Support for API cleanups.)
                         final long token = Binder.clearCallingIdentity();
                         try {
                             mPhoneAccountRegistrar.registerPhoneAccount(account);
