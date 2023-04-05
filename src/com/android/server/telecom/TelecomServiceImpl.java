@@ -37,6 +37,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.pm.ParceledListSlice;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -513,6 +514,24 @@ public class TelecomServiceImpl {
                         if (callingUid != Process.SHELL_UID) {
                             enforceUserHandleMatchesCaller(account.getAccountHandle());
                         }
+<<<<<<< HEAD
+=======
+
+                        if (TextUtils.isEmpty(account.getGroupId())
+                                && mContext.checkCallingOrSelfPermission(MODIFY_PHONE_STATE)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            Log.w(this, "registerPhoneAccount - attempt to set a"
+                                    + " group from a non-system caller.");
+                            // Not permitted to set group, so null it out.
+                            account = new PhoneAccount.Builder(account)
+                                    .setGroupId(null)
+                                    .build();
+                        }
+
+                        // Validate the profile boundary of the given image URI.
+                        validateAccountIconUserBoundary(account.getIcon());
+
+>>>>>>> 58becd3f (Resolve account image icon profile boundary exploit.)
                         final long token = Binder.clearCallingIdentity();
                         try {
                             mPhoneAccountRegistrar.registerPhoneAccount(account);
@@ -2098,6 +2117,23 @@ public class TelecomServiceImpl {
                 .EXTRA_DEFAULT_CALL_SCREENING_APP_COMPONENT_NAME, componentName);
             intent.setPackage(broadcastComponentName.getPackageName());
             mContext.sendBroadcast(intent);
+        }
+    }
+
+    private void validateAccountIconUserBoundary(Icon icon) {
+        // Refer to Icon#getUriString for context. The URI string is invalid for icons of
+        // incompatible types.
+        if (icon != null && (icon.getType() == Icon.TYPE_URI)) {
+            String encodedUser = icon.getUri().getEncodedUserInfo();
+            // If there is no encoded user, the URI is calling into the calling user space
+            if (encodedUser != null) {
+                int userId = Integer.parseInt(encodedUser);
+                if (userId != UserHandle.getUserId(Binder.getCallingUid())) {
+                    // If we are transcending the profile boundary, throw an error.
+                    throw new IllegalArgumentException("Attempting to register a phone account with"
+                            + " an image icon belonging to another user.");
+                }
+            }
         }
     }
 }
