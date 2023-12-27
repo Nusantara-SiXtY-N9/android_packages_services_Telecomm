@@ -514,12 +514,6 @@ public class TelecomServiceImpl {
                         if (callingUid != Process.SHELL_UID) {
                             enforceUserHandleMatchesCaller(account.getAccountHandle());
                         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 720aa20f (Support for API cleanups.)
-
                         if (TextUtils.isEmpty(account.getGroupId())
                                 && mContext.checkCallingOrSelfPermission(MODIFY_PHONE_STATE)
                                 != PackageManager.PERMISSION_GRANTED) {
@@ -530,14 +524,8 @@ public class TelecomServiceImpl {
                                     .setGroupId(null)
                                     .build();
                         }
-
-<<<<<<< HEAD
                         // Validate the profile boundary of the given image URI.
                         validateAccountIconUserBoundary(account.getIcon());
-
->>>>>>> 58becd3f (Resolve account image icon profile boundary exploit.)
-=======
->>>>>>> 720aa20f (Support for API cleanups.)
                         final long token = Binder.clearCallingIdentity();
                         try {
                             mPhoneAccountRegistrar.registerPhoneAccount(account);
@@ -2125,7 +2113,7 @@ public class TelecomServiceImpl {
             mContext.sendBroadcast(intent);
         }
     }
-
+    
     private void validateAccountIconUserBoundary(Icon icon) {
         // Refer to Icon#getUriString for context. The URI string is invalid for icons of
         // incompatible types.
